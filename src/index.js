@@ -40,10 +40,47 @@ class gameboard {
 
     playerOneBoard = this.makeBoard()
 
+    findEnd(ship, start) {
+        if (ship.rotation === 'horizontal') {
+            const end = [start[0], (start[1] + ship.length - 1)]
+            return end
+        }
+        if (ship.rotation === 'vertical') {
+            const end = [(start[0] + ship.length - 1), start[1]]
+            return end
+        }
+
+
+    }
+
     placeShip(ship, start, board) {
 
-        const end = [start[0], (start[1] + ship.length)]
-        return end
+        if (ship.rotation === 'horizontal') {
+
+            const end = [start[0], (start[1] + (ship.length - 1))]
+
+            if (end[0] < 0 || end[0] > 9 || end[1] < 0 || end[1] > 9) {
+                throw new Error('Ship out of bounds! Try again')
+            }
+
+            for (let i = 0; i < ship.length; i ++) {
+                board[start[0]][start[1]+ i] = 'PlayerOneShipA'
+            }
+        }
+        
+        if (ship.rotation === 'vertical') {
+
+            const end = [start[0] + (ship.length - 1), start[1]]
+
+            if (end[0] < 0 || end[0] > 9 || end[1] < 0 || end[1] > 9) {
+                throw new Error('Ship out of bounds! Try again')
+            }
+
+            for (let i = 0; i < ship.length; i++) {
+                board[start[0] + i][start[1]] = 'PlayerOneShipA'
+            }
+        }
+        return board
 
         // if (ship.rotation === 'horizontal') {
         //     const end = [start[0], (start[1] + ship)]
