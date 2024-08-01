@@ -1,11 +1,12 @@
 console.log('hello')
 
 class ships {
-    constructor(length, rotation) {
+    constructor(length, rotation, shipNumber) {
         this.length = length
         this.timesHit = 0
         this.isSunk = false
         this.rotation = rotation
+        this.shipNumber = shipNumber
     }
 
     hit() {
@@ -38,7 +39,6 @@ class gameboard {
         return board
     }
 
-    playerOneBoard = this.makeBoard()
 
     findEnd(ship, start) {
         if (ship.rotation === 'horizontal') {
@@ -53,18 +53,50 @@ class gameboard {
 
     }
 
+    trackCoordinates(start, ship) {
+
+        let allCoordinates = []
+        for (let i = 0; i < ship.length; i ++) {
+            const coordinates = [start[0], start[1] + i]
+            allCoordinates.push(coordinates)
+        }
+        return allCoordinates
+    }
+
+    checkCoordinates(trackCoordinates, board) {
+        trackCoordinates.forEach((item) => {
+            if (typeof board[item[0]][item[1]] === 'string'){
+                throw new Error('ERROR')
+            }
+            console.log('No overlap')
+        })
+    }
+
     placeShip(ship, start, board) {
 
         if (ship.rotation === 'horizontal') {
 
             const end = [start[0], (start[1] + (ship.length - 1))]
 
-            if (end[0] < 0 || end[0] > 9 || end[1] < 0 || end[1] > 9) {
+            if (end[0] < 0 || end[0] > 8 || end[1] < 0 || end[1] > 8) {
                 throw new Error('Ship out of bounds! Try again')
             }
 
+            let allCoordinates = []
             for (let i = 0; i < ship.length; i ++) {
-                board[start[0]][start[1]+ i] = 'PlayerOneShipA'
+                const coordinates = [start[0], start[1] + i]
+                allCoordinates.push(coordinates)
+            }
+
+            
+            allCoordinates.forEach((item) => {
+                if (typeof board[item[0]][item[1]] === 'string'){
+                    throw new Error('A ship is already here! Try again')
+                }
+            })
+
+            for (let i = 0; i < ship.length; i ++) {
+                board[start[0]][start[1]+ i] = ship.shipNumber
             }
         }
         
@@ -72,12 +104,25 @@ class gameboard {
 
             const end = [start[0] + (ship.length - 1), start[1]]
 
-            if (end[0] < 0 || end[0] > 9 || end[1] < 0 || end[1] > 9) {
+            if (end[0] < 0 || end[0] > 8 || end[1] < 0 || end[1] > 8) {
                 throw new Error('Ship out of bounds! Try again')
             }
 
+            let allCoordinates = []
+            for (let i = 0; i < ship.length; i ++) {
+                const coordinates = [start[0] + i, start[1]]
+                allCoordinates.push(coordinates)
+            }
+
+            
+            allCoordinates.forEach((item) => {
+                if (typeof board[item[0]][item[1]] === 'string'){
+                    throw new Error('A ship is already here! Try again')
+                }
+            })
+
             for (let i = 0; i < ship.length; i++) {
-                board[start[0] + i][start[1]] = 'PlayerOneShipA'
+                board[start[0] + i][start[1]] = ship.shipNumber
             }
         }
         return board
