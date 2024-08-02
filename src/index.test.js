@@ -186,12 +186,6 @@ test('throws error if ship has already been placed on these coordinates 1', () =
     // eslint-disable-next-line no-undef
     expect(() => playerOne.placeShip(overlappingShip, [2,2], playerOneBoard)).toThrow('A ship is already here! Try again')});
 
-test('tracks all coordinates', () => {
-    const ship = new ships(3, 'horizontal', 'one')
-    const playerOne = new gameboard
-    expect(playerOne.trackCoordinates([0,0], ship)).toEqual([[0,0],[0,1],[0,2]])
-})
-
 test('throws error if ship has already been placed on these coordinates 2', () => {
     const newship = new ships(2, 'horizontal', 'one')
     const overlappingShip = new ships(3, 'vertical', 'two')
@@ -205,3 +199,50 @@ test('throws error if ship has already been placed on these coordinates 2', () =
     // eslint-disable-next-line no-undef
     expect(() => playerOne.placeShip(overlappingShip, [2,2], playerOneBoard)).toThrow('A ship is already here! Try again')});
 
+test('ship recieves hit 1', () => {
+    const playerOne = new gameboard
+    const playerOneBoard = playerOne.makeBoard()
+
+    const newship = new ships(2, 'horizontal', 'one')
+    playerOne.placeShip(newship, [0,0], playerOneBoard)
+    playerOne.addShips(newship)
+
+    expect(playerOne.recieveAttack([0,0], playerOneBoard)).toEqual('Hit successful')
+})
+
+test('ship recieves hit 2', () => {
+    const playerOne = new gameboard
+    const playerOneBoard = playerOne.makeBoard()
+
+    const newship = new ships(2, 'vertical', 'one')
+    playerOne.placeShip(newship, [5,5], playerOneBoard)
+    playerOne.addShips(newship)
+
+
+    expect(playerOne.recieveAttack([5,5], playerOneBoard)).toEqual('Hit successful')
+})
+
+test('ship does not recieve hit', () => {
+    const playerOne = new gameboard
+    const playerOneBoard = playerOne.makeBoard()
+
+    const newship = new ships(2, 'vertical', 'one')
+    playerOne.placeShip(newship, [2,0], playerOneBoard)
+    playerOne.recieveAttack([2,2], playerOneBoard)
+
+    expect(playerOne.recieveAttack([2,1], playerOneBoard)).toEqual([[2,2],[2,1]])
+})
+
+test('throws error if hit already', () => {
+    const newship = new ships(2, 'horizontal', 'one')
+
+    // eslint-disable-next-line no-undef
+    const playerOne = new gameboard
+    const playerOneBoard = playerOne.makeBoard()
+    
+    playerOne.placeShip(newship, [0,0], playerOneBoard)
+    playerOne.recieveAttack([5,5], playerOneBoard)
+
+
+    // eslint-disable-next-line no-undef
+    expect(() => playerOne.recieveAttack([5,5], playerOneBoard)).toThrow('Already tried!')});

@@ -1,5 +1,8 @@
 console.log('hello')
 
+
+
+
 class ships {
     constructor(length, rotation, shipNumber) {
         this.length = length
@@ -8,20 +11,35 @@ class ships {
         this.rotation = rotation
         this.shipNumber = shipNumber
     }
-
+    
     hit() {
         this.timesHit++
-        return this.checkSunk()
+        this.checkSunk()
     }
-
+    
     checkSunk() {
         return this.isSunk = this.length === this.timesHit ? true : false
     }
+    
 }
+
 
 class gameboard {
     constructor(){
+        this.missedAttacks = []
+        this.allShips = []
+        this.shipIndex = {}
+    }
 
+    addShips(ship) {
+        this.allShips.push(ship)
+        this.shipIndex[ship.shipNumber] = this.allShips.length - 1
+        
+    }
+    
+    getShip(name) {
+        const target = this.shipIndex[name]
+        return this.allShips[target]
     }
 
     makeBoard() {
@@ -34,10 +52,39 @@ class gameboard {
                 row.push(n)
             }
             board.push(row)
-        }
+        } 
         
         return board
     }
+
+
+    recieveAttack(coordinates, board) {
+
+        const filteredAttacks = this.missedAttacks.filter(element => 
+            element[0] === coordinates[0] && element[1] === coordinates[1]
+        )
+
+        if (filteredAttacks.length >= 1) {
+            throw new Error('Already tried!')
+        }
+
+        const x = coordinates[0]
+        const y = coordinates[1]
+
+        if (typeof board[x][y] === 'string') {
+            const shipName = board[x][y]
+
+            const targetShip = this.getShip(shipName)
+            targetShip.hit()
+            return 'Hit successful'
+            
+        }
+        
+        this.missedAttacks.push(coordinates)  
+        return this.missedAttacks
+    }
+
+    
 
 
     findEnd(ship, start) {
@@ -51,25 +98,6 @@ class gameboard {
         }
 
 
-    }
-
-    trackCoordinates(start, ship) {
-
-        let allCoordinates = []
-        for (let i = 0; i < ship.length; i ++) {
-            const coordinates = [start[0], start[1] + i]
-            allCoordinates.push(coordinates)
-        }
-        return allCoordinates
-    }
-
-    checkCoordinates(trackCoordinates, board) {
-        trackCoordinates.forEach((item) => {
-            if (typeof board[item[0]][item[1]] === 'string'){
-                throw new Error('ERROR')
-            }
-            console.log('No overlap')
-        })
     }
 
     placeShip(ship, start, board) {
@@ -127,22 +155,10 @@ class gameboard {
         }
         return board
 
-        // if (ship.rotation === 'horizontal') {
-        //     const end = [start[0], (start[1] + ship)]
-        //     for (let i = start[1]; i < end[1]; i++) {
-        //         board[start[0]][i] = 'PlayerOneShipA'
-        //     }
-        // }
-
-        // if (ship.rotation === 'vertical') {
-        //     const end = [start[[0] - ship.length], start[1]]
-        //     for (let i = start[0]; i > end[0]; i--) {
-        //         this.playerOneBoard[i][start[1]] = 'PlayerOneShipA'
-        //     }
-        // }
-
     }
+
 }
+
 
 // eslint-disable-next-line no-undef
 module.exports = {
