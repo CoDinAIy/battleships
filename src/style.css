@@ -1,0 +1,17 @@
+.rowDOM {
+    display: flex;
+}
+
+.cell {
+    padding: 1em;
+    outline: solid black 0.5px;
+}
+
+.boards {
+    display: flex;
+    gap: 2em;
+}
+
+.ship {
+    background-color: yellow;
+}

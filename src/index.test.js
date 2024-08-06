@@ -246,3 +246,45 @@ test('throws error if hit already', () => {
 
     // eslint-disable-next-line no-undef
     expect(() => playerOne.recieveAttack([5,5], playerOneBoard)).toThrow('Already tried!')});
+
+
+test('shows how much ships are left 1', () => {
+    const playerOne = new gameboard
+    const playerOneBoard = playerOne.makeBoard()
+
+    const newship = new ships(2, 'horizontal', 'one')
+    playerOne.placeShip(newship, [0,0], playerOneBoard)
+    playerOne.addShips(newship)
+
+    expect(playerOne.hasAllSunk()).toEqual('1 ships remaining')
+})
+
+test('shows how much ships are left 2', () => {
+    const playerOne = new gameboard
+    const playerOneBoard = playerOne.makeBoard()
+
+    const shipOne = new ships(2, 'horizontal', 'one')
+    const shipTwo = new ships(3, 'horizontal', 'one')
+
+    playerOne.placeShip(shipOne, [0,0], playerOneBoard)
+    playerOne.addShips(shipOne)
+    playerOne.placeShip(shipTwo, [1,0], playerOneBoard)
+    playerOne.addShips(shipTwo)
+
+    expect(playerOne.hasAllSunk()).toEqual('2 ships remaining')
+})
+
+test('shows how much ships are left 2', () => {
+    const playerOne = new gameboard
+    const playerOneBoard = playerOne.makeBoard()
+
+    const shipOne = new ships(2, 'horizontal', 'one')
+
+    playerOne.placeShip(shipOne, [0,0], playerOneBoard)
+    playerOne.addShips(shipOne)
+
+    playerOne.recieveAttack([0,0], playerOneBoard)
+    playerOne.recieveAttack([0,1], playerOneBoard)
+
+    expect(playerOne.hasAllSunk()).toEqual('All ships sunk!')
+})
