@@ -11,6 +11,8 @@ class ships {
         this.rotation = rotation
         this.shipNumber = shipNumber
         this.color = color
+        this.start = null
+        this.end = null
     }
     
     hit() {
@@ -27,6 +29,7 @@ class ships {
 
 class gameboard {
     constructor(){
+        this.board = null
         this.missedAttacks = []
         this.allShips = []
         this.shipIndex = {}
@@ -34,6 +37,9 @@ class gameboard {
 
         this.handleClick = this.handleClick.bind(this);
         this.updateShip = this.updateShip.bind(this);
+
+        this.cellsBeforeClicked = null
+        this.shipTarget = null
     }
 
     addShips(ship) {
@@ -143,6 +149,10 @@ class gameboard {
 
             const end = [start[0], (start[1] + (ship.length - 1))]
 
+            if (start[0] < 0 || start[0] > 9 || start[1] < 0 || start[1] > 9) {
+                throw new Error('Ship out of bounds! Try again')
+            }
+
             if (end[0] < 0 || end[0] > 9 || end[1] < 0 || end[1] > 9) {
                 throw new Error('Ship out of bounds! Try again')
             }
@@ -168,11 +178,16 @@ class gameboard {
             for (let i = 0; i < ship.length; i ++) {
                 board[start[0]][start[1]+ i] = ship.shipNumber
             }
+            ship.end = end
         }
         
         if (ship.rotation === 'vertical') {
 
             const end = [(start[0] + ship.length - 1), start[1]]
+
+            if (start[0] < 0 || start[0] > 9 || start[1] < 0 || start[1] > 9) {
+                throw new Error('Ship out of bounds! Try again')
+            }
 
             if (end[0] < 0 || end[0] > 9|| end[1] < 0 || end[1] > 9) {
                 throw new Error('Ship out of bounds! Try again')
@@ -200,7 +215,10 @@ class gameboard {
             for (let i = 0; i < ship.length; i++) {
                 board[start[0] + i][start[1]] = ship.shipNumber
             }
+            ship.end = end
         }
+        ship.start = start
+        this.board = board
         return board
 
     }
@@ -272,15 +290,15 @@ class gameboard {
     }
 
     highlightShip(event) {
-    
+
         const cellClicked = event.target.id
         const shipName = event.target.dataset.attribute
         
         console.log(shipName)
         console.log(this.shipIndex)
 
-        const shipTarget = this.getShip(shipName)
-        console.log(shipTarget)
+        this.shipTarget = this.getShip(shipName)
+        console.log(this.shipTarget)
 
 
         
@@ -288,7 +306,6 @@ class gameboard {
             const cell = event.target
             
             const shipType = cell.dataset.attribute
-            this.newShipEventListener()
             
             const cells = document.querySelectorAll('.cell')
             let shipCells = []
@@ -299,13 +316,14 @@ class gameboard {
                     cell.classList.remove('ship')
                 }
             }) 
-    
-            let cellsBeforeClicked = 0
-            while (shipCells[cellsBeforeClicked] !== cellClicked) {
-                cellsBeforeClicked++
+            
+            this.cellsBeforeClicked = 0
+            while (shipCells[this.cellsBeforeClicked] !== cellClicked) {
+                this.cellsBeforeClicked++
             }
-            console.log(`${cellsBeforeClicked} cells before this`)
-    
+            console.log(`${this.cellsBeforeClicked} cells before this`)
+            
+            this.newShipEventListener()
     }
     
     handleClick(event) {
@@ -336,11 +354,85 @@ class gameboard {
         })
     }
     
-    updateShip(event, ship, cellsBeforeClicked) {
+    updateShip(event) {
 
-        // const target = event.target
-        // const newStart = 
-        // const newEnd = 
+        const oldShipStart = this.shipTarget.start
+        const oldShipEnd = this.shipTarget.end
+
+        
+        
+        const cellId = event.target.id
+        
+        const cellClicked = [parseInt(cellId[0]), parseInt(cellId[1])]
+        
+        if (this.shipTarget.rotation === 'horizontal') {
+            
+            let allCoordinates = []
+    
+            for (let i = 0; i < this.shipTarget.length; i++) {
+                const coordinates = [oldShipStart[0], oldShipStart[1] + i]
+                allCoordinates.push(coordinates)
+            }
+
+            allCoordinates.forEach((coordinate) => {
+               this.board[coordinate[0]][coordinate[1]] = null
+            })
+            const newStart = [cellClicked[0], cellClicked[1] - this.cellsBeforeClicked]
+            const newEnd = [cellClicked[0], parseInt(cellClicked[1]) + this.shipTarget.length - this.cellsBeforeClicked - 1]
+ 
+
+
+            this.placeShip(this.shipTarget, newStart, this.board)
+            console.log(this.board)
+
+            for (let i = 0; i < this.shipTarget.length; i++) {
+                const oldShipDiv = document.getElementById(`${oldShipStart[0]}${oldShipStart[1] + i}`)
+                oldShipDiv.classList.remove(this.shipTarget.color)
+                oldShipDiv.removeAttribute('data-attribute', this.shipTarget.shipNumber)
+    
+                console.log(oldShipDiv)
+    
+            }
+
+            this.shipTarget.start = newStart
+            this.shipTarget = newEnd
+        }
+
+        if (this.shipTarget.rotation === 'vertical') {
+            
+            let allCoordinates = []
+    
+            for (let i = 0; i < this.shipTarget.length; i++) {
+                const coordinates = [oldShipStart[0] + i, oldShipStart[1]]
+                allCoordinates.push(coordinates)
+            }
+
+            allCoordinates.forEach((coordinate) => {
+               this.board[coordinate[0]][coordinate[1]] = null
+            })
+            const newStart = [cellClicked[0] - this.cellsBeforeClicked, cellClicked[1]]
+            const newEnd = [parseInt(cellClicked[0]) + this.shipTarget.length - this.cellsBeforeClicked - 1, parseInt(cellClicked[1])]
+ 
+
+
+            this.placeShip(this.shipTarget, newStart, this.board)
+            console.log(this.board)
+
+            for (let i = 0; i < this.shipTarget.length; i++) {
+                const oldShipDiv = document.getElementById(`${oldShipStart[0] + i}${oldShipStart[1]}`)
+                oldShipDiv.classList.remove(this.shipTarget.color)
+                oldShipDiv.removeAttribute('data-attribute', this.shipTarget.shipNumber)
+    
+                console.log(oldShipDiv)
+    
+            }
+
+            this.shipTarget.start = newStart
+            this.shipTarget = newEnd
+        }
+
+
+        
 
 
 

@@ -282,5 +282,5 @@ test('shows how much ships are left 2', () => {
     playerOne.recieveAttack([0,0], playerOneBoard)
     playerOne.recieveAttack([0,1], playerOneBoard)
 
-    expect(playerOne.hasAllSunk()).toEqual('All ships sunk!3')
+    expect(playerOne.hasAllSunk()).toEqual('All ships sunk!')
 })
