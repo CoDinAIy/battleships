@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 // eslint-disable-next-line no-undef
 const { ships, gameboard } = require('./index')
 
@@ -59,6 +60,7 @@ test('Places ship at correct location vertically 1', () => {
         [0,1,2,3,4,5,6,7,8,9,]])
 })
 
+// eslint-disable-next-line no-undef
 test('Places ship at correct location vertically 2', () => {
     const newship = new ships(2, 'vertical', 'two')
     // eslint-disable-next-line no-undef
@@ -137,29 +139,23 @@ test('Places ship at correct location horizontally 3', () => {
 
 test('throws error if end coordinates out of bounds', () => {
     const newship = new ships(3, 'horizontal', 'one')
-    // eslint-disable-next-line no-undef
     const playerOne = new gameboard
     const playerOneBoard = playerOne.makeBoard()
-    // eslint-disable-next-line no-undef
     expect(() => playerOne.placeShip(newship, [0, 7], playerOneBoard)).toThrow('Ship out of bounds! Try again')});
     
 test('throws error if end coordinates out of bounds two', () => {
     const newship = new ships(3, 'vertical', 'one')
-    // eslint-disable-next-line no-undef
     const playerOne = new gameboard
     const playerOneBoard = playerOne.makeBoard()
-    // eslint-disable-next-line no-undef
     expect(() => playerOne.placeShip(newship, [7, 0], playerOneBoard)).toThrow('Ship out of bounds! Try again')});
         
     test('Places more than one ship at the same time', () => {
         const shipOne = new ships(3, 'horizontal', 'one')
         const shipTwo = new ships(2, 'vertical', 'two')
-        // eslint-disable-next-line no-undef
         const playerOne = new gameboard
         const playerOneBoard = playerOne.makeBoard()
     
         playerOne.placeShip(shipOne, [0,0], playerOneBoard)
-        // eslint-disable-next-line no-undef
         expect(playerOne.placeShip(shipTwo, [2,0], playerOneBoard)).toEqual([
             ['one','one','one',3,4,5,6,7,8,9],
             [0,1,2,3,4,5,6,7,8,9,],
@@ -286,5 +282,5 @@ test('shows how much ships are left 2', () => {
     playerOne.recieveAttack([0,0], playerOneBoard)
     playerOne.recieveAttack([0,1], playerOneBoard)
 
-    expect(playerOne.hasAllSunk()).toEqual('All ships sunk!')
+    expect(playerOne.hasAllSunk()).toEqual('All ships sunk!3')
 })

@@ -4,7 +4,7 @@
 
 .cell {
     padding: 1em;
-    outline: solid black 0.5px;
+    outline: solid black 0.1em;
 }
 
 .boards {
@@ -13,5 +13,29 @@
 }
 
 .ship {
+    outline: solid 0.1em black;
+}
+
+.blue {
+    background-color: blue;
+}
+
+.green {
+    background-color: green;
+}
+
+.pink {
+    background-color: pink;
+}
+
+.orange {
+    background-color: orange;
+}
+
+.yellow {
     background-color: yellow;
+}
+
+.highlighted {
+    outline: solid 0.2em red;
 }
