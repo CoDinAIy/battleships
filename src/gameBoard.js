@@ -1,34 +1,11 @@
 export { ships, gameboard }
+import { ships } from './ships'
 
 console.log('he llo')
 
-
-class ships {
-    constructor(length, rotation, shipNumber, color) {
-        this.length = length
-        this.timesHit = 0
-        this.isSunk = false
-        this.rotation = rotation
-        this.shipNumber = shipNumber
-        this.color = color
-        this.start = null
-        this.end = null
-    }
-    
-    hit() {
-        this.timesHit++
-        this.checkSunk()
-    }
-    
-    checkSunk() {
-        return this.isSunk = this.length === this.timesHit ? true : false
-    }
-    
-}
-
-
 class gameboard {
-    constructor(){
+    constructor(player){
+        this.player = player
         this.board = null
         this.missedAttacks = []
         this.allShips = []
@@ -56,12 +33,14 @@ class gameboard {
     makeBoard() {
         const board = new Array
         const boardDOM = document.createElement('div')
-        boardDOM.classList.add('boardDOM')
+        boardDOM.classList.add('board')
+        boardDOM.classList.add(this.player)
 
         for (let i = 0; i !== 10; i++) {
             const row = new Array
             const rowDOM = document.createElement('div')
-            rowDOM.classList.add('rowDOM')
+            rowDOM.classList.add('row')
+            rowDOM.setAttribute('id', i)
             
             for (let n = 0; n !== 10; n ++) {
                 const cell = document.createElement('div')
@@ -140,6 +119,9 @@ class gameboard {
     }
 
     placeShip(ship, start, board) {
+        
+
+        this.shipTarget = ship
 
         if (start === 'random')
 
@@ -150,35 +132,100 @@ class gameboard {
             const end = [start[0], (start[1] + (ship.length - 1))]
 
             if (start[0] < 0 || start[0] > 9 || start[1] < 0 || start[1] > 9) {
+
+                const oldShipStart = ship.start
+                let allCoordinates = []
+            
+            for (let i = 0; i < ship.length; i++) {
+                const coordinates = [oldShipStart[0], oldShipStart[1] + i]
+                allCoordinates.push(coordinates)
+            }
+
+            for (let i = 0; i < ship.length; i++) {
+                const oldShipDiv = document.getElementById(`${oldShipStart[0]}${oldShipStart[1] + i}`)
+                console.log(oldShipDiv)
+                oldShipDiv.classList.add(ship.color)
+                oldShipDiv.removeAttribute('data-attribute', ship.shipNumber)
+            }
                 throw new Error('Ship out of bounds! Try again')
             }
 
             if (end[0] < 0 || end[0] > 9 || end[1] < 0 || end[1] > 9) {
+                const oldShipStart = ship.start
+
+                let allCoordinates = []
+            
+            for (let i = 0; i < ship.length; i++) {
+                const coordinates = [oldShipStart[0], oldShipStart[1] + i]
+                allCoordinates.push(coordinates)
+            }
+
+            for (let i = 0; i < ship.length; i++) {
+                const oldShipDiv = document.getElementById(`${oldShipStart[0]}${oldShipStart[1] + i}`)
+                console.log(oldShipDiv)
+                oldShipDiv.classList.add(ship.color)
+                oldShipDiv.removeAttribute('data-attribute', ship.shipNumber)
+            }
                 throw new Error('Ship out of bounds! Try again')
             }
 
             let allCoordinates = []
             for (let i = 0; i < ship.length; i ++) {
-                const shipDOM = document.getElementById(`${start[0]}${start[1] + i}`)
-                shipDOM.classList.add('ship')
-                shipDOM.setAttribute('data-attribute', ship.shipNumber)
-                const color = ship.color
-                shipDOM.classList.add(color)
                 const coordinates = [start[0], start[1] + i]
                 allCoordinates.push(coordinates)
             }
-
             
+            let isUnique = true
             allCoordinates.forEach((item) => {
+                console.log(allCoordinates)
+                console.log(board[item[0]][item[1]])
+
                 if (typeof board[item[0]][item[1]] === 'string'){
+                    isUnique === false
+                    console.log(ship)
+
+                    const oldShipStart = ship.start    
+                    let allCoordinates = []
+                
+                for (let i = 0; i < ship.length; i++) {
+                    const coordinates = [oldShipStart[0], oldShipStart[1] + i]
+                    allCoordinates.push(coordinates)
+                }
+    
+                for (let i = 0; i < ship.length; i++) {
+                    const oldShipDiv = document.getElementById(`${oldShipStart[0]}${oldShipStart[1] + i}`)
+                    console.log(oldShipDiv)
+                    oldShipDiv.classList.add(ship.color)
+                    oldShipDiv.removeAttribute('data-attribute', ship.shipNumber)
+                }
                     throw new Error('A ship is already here! Try again')
                 }
             })
 
+            if (isUnique === true) {
+
+                allCoordinates.forEach((item) => { 
+                    const playerBoardDom = document.querySelector(`.${this.player}`)
+                    const row = playerBoardDom.querySelector(`[id="${item[0]}"]`)
+
+                    const shipDOM = row.querySelector(`[id="${row.id}${item[1]}"]`)
+                    shipDOM.classList.add('ship')
+                    shipDOM.setAttribute('data-attribute', ship.shipNumber)
+                    const color = ship.color
+                    shipDOM.classList.add(color) 
+
+                })
+
+
+
+            }
+
+            
+            
             for (let i = 0; i < ship.length; i ++) {
                 board[start[0]][start[1]+ i] = ship.shipNumber
             }
-            ship.end = end
+            ship.end = end            
         }
         
         if (ship.rotation === 'vertical') {
@@ -186,31 +233,85 @@ class gameboard {
             const end = [(start[0] + ship.length - 1), start[1]]
 
             if (start[0] < 0 || start[0] > 9 || start[1] < 0 || start[1] > 9) {
+                ship
+
+                const oldShipStart = ship.start
+                let allCoordinates = []
+            
+            for (let i = 0; i < ship.length; i++) {
+                const coordinates = [oldShipStart[0] + i, oldShipStart[1]]
+                allCoordinates.push(coordinates)
+            }
+
+            for (let i = 0; i < ship.length; i++) {
+                const oldShipDiv = document.getElementById(`${oldShipStart[0] + i}${oldShipStart[1]}`)
+                console.log(oldShipDiv)
+                oldShipDiv.classList.add(ship.color)
+                oldShipDiv.removeAttribute('data-attribute', ship.shipNumber)
+            }
                 throw new Error('Ship out of bounds! Try again')
             }
 
             if (end[0] < 0 || end[0] > 9|| end[1] < 0 || end[1] > 9) {
+
+                const oldShipStart = ship.start
+                let allCoordinates = []
+            
+            for (let i = 0; i < ship.length; i++) {
+                const coordinates = [oldShipStart[0] + i, oldShipStart[1]]
+                allCoordinates.push(coordinates)
+            }
+
+            for (let i = 0; i < ship.length; i++) {
+                const oldShipDiv = document.getElementById(`${oldShipStart[0] + i}${oldShipStart[1]}`)
+                console.log(oldShipDiv)
+                oldShipDiv.classList.add(ship.color)
+                oldShipDiv.removeAttribute('data-attribute', ship.shipNumber)
+            }
                 throw new Error('Ship out of bounds! Try again')
             }
 
             let allCoordinates = []
             for (let i = 0; i < ship.length; i ++) {
-                const shipDOM = document.getElementById(`${start[0] + i}${start[1]}`)
-                shipDOM.classList.add('ship')
-                shipDOM.setAttribute('data-attribute', ship.shipNumber)
-
-                const color = ship.color
-                shipDOM.classList.add(color)
                 const coordinates = [start[0] + i, start[1]]
                 allCoordinates.push(coordinates)
             }
 
-            
+            let isUnique = true
             allCoordinates.forEach((item) => {
                 if (typeof board[item[0]][item[1]] === 'string'){
+                    isUnique === false
+
+                    const oldShipStart = ship.start    
+                    let allCoordinates = []
+                
+                for (let i = 0; i < ship.length; i++) {
+                    const coordinates = [oldShipStart[0] + i, oldShipStart[1]]
+                    allCoordinates.push(coordinates)
+                }
+    
+                for (let i = 0; i < ship.length; i++) {
+                    const oldShipDiv = document.getElementById(`${oldShipStart[0] + i}${oldShipStart[1]}`)
+                    console.log(oldShipDiv)
+                    oldShipDiv.classList.add(ship.color)
+                    oldShipDiv.removeAttribute('data-attribute', ship.shipNumber)
+                }
                     throw new Error('A ship is already here! Try again')
                 }
             })
+
+            if (isUnique === true) {
+                allCoordinates.forEach((item) => {
+                    const playerBoardDom = document.querySelector(`.${this.player}`)
+                    const row = playerBoardDom.querySelector(`[id="${item[0]}"]`)
+
+                    const shipDOM = row.querySelector(`[id="${row.id}${item[1]}"]`)
+                    shipDOM.classList.add('ship')
+                    shipDOM.setAttribute('data-attribute', ship.shipNumber)
+                    const color = ship.color
+                    shipDOM.classList.add(color) 
+                })
+            }
 
             for (let i = 0; i < ship.length; i++) {
                 board[start[0] + i][start[1]] = ship.shipNumber
@@ -280,7 +381,9 @@ class gameboard {
     }
 
     addEventListeners() {
-        const cells = document.querySelectorAll('.cell')
+        const playerOne = document.querySelector('.playerOne')
+
+        const cells = playerOne.querySelectorAll('.cell')
         cells.forEach((cell) => {
             if (cell.dataset.attribute !== undefined) {
     
@@ -290,24 +393,19 @@ class gameboard {
     }
 
     highlightShip(event) {
-
         const cellClicked = event.target.id
         const shipName = event.target.dataset.attribute
         
-        console.log(shipName)
-        console.log(this.shipIndex)
 
         this.shipTarget = this.getShip(shipName)
-        console.log(this.shipTarget)
-
-
-        
-        
+    
             const cell = event.target
             
             const shipType = cell.dataset.attribute
+
+            const board = document.querySelector(`.${this.player}`)
             
-            const cells = document.querySelectorAll('.cell')
+            const cells = board.querySelectorAll('.cell')
             let shipCells = []
             cells.forEach((cell) => {
                 if (cell.dataset.attribute === shipType && cell.dataset.attribute !== undefined ) {
@@ -317,11 +415,11 @@ class gameboard {
                 }
             }) 
             
+
             this.cellsBeforeClicked = 0
             while (shipCells[this.cellsBeforeClicked] !== cellClicked) {
                 this.cellsBeforeClicked++
             }
-            console.log(`${this.cellsBeforeClicked} cells before this`)
             
             this.newShipEventListener()
     }
@@ -332,7 +430,6 @@ class gameboard {
     
     
     newShipEventListener() {
-        console.log('waiting for ship to be places at new coordinate')
         this.removeEventListeners()
         this.addEmptyCellEventListeners()
     }
@@ -357,7 +454,7 @@ class gameboard {
     updateShip(event) {
 
         const oldShipStart = this.shipTarget.start
-        const oldShipEnd = this.shipTarget.end
+        // const oldShipEnd = this.shipTarget.end
 
         
         
@@ -367,38 +464,43 @@ class gameboard {
         
         if (this.shipTarget.rotation === 'horizontal') {
             
+            
             let allCoordinates = []
-    
+            
             for (let i = 0; i < this.shipTarget.length; i++) {
                 const coordinates = [oldShipStart[0], oldShipStart[1] + i]
                 allCoordinates.push(coordinates)
             }
-
+            
             allCoordinates.forEach((coordinate) => {
                this.board[coordinate[0]][coordinate[1]] = null
             })
             const newStart = [cellClicked[0], cellClicked[1] - this.cellsBeforeClicked]
             const newEnd = [cellClicked[0], parseInt(cellClicked[1]) + this.shipTarget.length - this.cellsBeforeClicked - 1]
- 
-
-
-            this.placeShip(this.shipTarget, newStart, this.board)
-            console.log(this.board)
-
+            
             for (let i = 0; i < this.shipTarget.length; i++) {
                 const oldShipDiv = document.getElementById(`${oldShipStart[0]}${oldShipStart[1] + i}`)
                 oldShipDiv.classList.remove(this.shipTarget.color)
                 oldShipDiv.removeAttribute('data-attribute', this.shipTarget.shipNumber)
     
-                console.log(oldShipDiv)
     
             }
+
+            this.placeShip(this.shipTarget, newStart, this.board)
+            console.log(this.board)
+
 
             this.shipTarget.start = newStart
             this.shipTarget = newEnd
         }
 
         if (this.shipTarget.rotation === 'vertical') {
+
+            for (let i = 0; i < this.shipTarget.length; i++) {
+                const oldShipDiv = document.getElementById(`${oldShipStart[0] + i}${oldShipStart[1]}`)
+                oldShipDiv.classList.remove(this.shipTarget.color)
+                oldShipDiv.removeAttribute('data-attribute', this.shipTarget.shipNumber)    
+            }
             
             let allCoordinates = []
     
@@ -418,30 +520,9 @@ class gameboard {
             this.placeShip(this.shipTarget, newStart, this.board)
             console.log(this.board)
 
-            for (let i = 0; i < this.shipTarget.length; i++) {
-                const oldShipDiv = document.getElementById(`${oldShipStart[0] + i}${oldShipStart[1]}`)
-                oldShipDiv.classList.remove(this.shipTarget.color)
-                oldShipDiv.removeAttribute('data-attribute', this.shipTarget.shipNumber)
-    
-                console.log(oldShipDiv)
-    
-            }
-
             this.shipTarget.start = newStart
             this.shipTarget = newEnd
         }
-
-
-        
-
-
-
-
-
-
-
-
-
 
         const cells = document.querySelectorAll('.cell')
         cells.forEach((cell) => {
@@ -459,8 +540,22 @@ class gameboard {
             }
         })
     }
-}
+    
+    removePreGameFeatures() {
+        const cells = document.querySelectorAll('cell')
+        cells.forEach((cell) => {
+            cell.removeEventListener('click', this.handleClick)
+            cell.removeEventListener('click', this.removeEmptyCellEventListeners)
+            cell.removeEventListener('click', this.removeEventListeners)
 
+        })
+    }
+    
+    startGame() {
+        console.log('starting')
+    }
+
+}
 
 
 
