@@ -41,11 +41,11 @@ function waitComputerAttack() {
     playerCell.classList.add('hit')
     console.log(playerCell)
     
-    if (computer.gameboard.gameOver !== true) {
+    if (playerOne.gameboard.gameOver !== true) {
         waitPlayerAttack()
-    } else if (computer.gameboard.gameOver === true) {
+    } else {
         console.log('Computer Wins')
-        removeComputerBoardListener()
+        removeComputerBoardListener()   
     }
 }
 
@@ -55,6 +55,9 @@ function addComputerBoardListener() {
     const cells = computerBoard.querySelectorAll('.cell')
 
     cells.forEach((cell) => {
+        if (cell.classList.contains('hit')) {
+            return
+        }
         cell.addEventListener('click', handlePlayerOneClick)
     })
 
@@ -80,7 +83,7 @@ function handlePlayerOneClick(event) {
 
     if (computer.gameboard.gameOver !== true) {
         waitComputerAttack()
-    } else if (computer.gameboard.gameOver === true) {
+    } else {
         console.log('Player One Wins')
     }
 }

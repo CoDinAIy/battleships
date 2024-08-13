@@ -73,7 +73,7 @@ class gameboard {
         if (this.allShips.length === this.totalSunk) {
             this.gameOver = true
             console.log('All ships sunk!')
-            console.log(this.gameOver)
+            console.log(`${this.player}${this.gameOver}`)
         } else {
             console.log(`${this.allShips.length - this.totalSunk} ships remaining for ${this.player}`)
         }
