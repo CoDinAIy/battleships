@@ -5,6 +5,7 @@ console.log('he llo')
 
 class gameboard {
     constructor(player){
+        this.gameOver = false
         this.player = player
         this.board = null
         this.missedAttacks = []
@@ -14,6 +15,8 @@ class gameboard {
 
         this.handleClick = this.handleClick.bind(this);
         this.updateShip = this.updateShip.bind(this);
+        this.removeEventListeners = this.removeEventListeners.bind(this);
+        this.removeEmptyCellEventListeners = this.removeEmptyCellEventListeners.bind(this);
 
         this.cellsBeforeClicked = null
         this.shipTarget = null
@@ -60,6 +63,7 @@ class gameboard {
     }
 
     hasAllSunk() {
+        this.totalSunk = 0
         this.allShips.forEach((ship) => {
             if (ship.isSunk === true) {
                 this.totalSunk++
@@ -67,13 +71,16 @@ class gameboard {
         })
 
         if (this.allShips.length === this.totalSunk) {
-            return 'All ships sunk!'
+            this.gameOver = true
+            console.log('All ships sunk!')
+            console.log(this.gameOver)
+        } else {
+            console.log(`${this.allShips.length - this.totalSunk} ships remaining for ${this.player}`)
         }
-        return (`${this.allShips.length - this.totalSunk} ships remaining`)
     }
 
 
-    recieveAttack(coordinates, board) {
+    recieveAttack(coordinates) {
 
         const filteredAttacks = this.missedAttacks.filter(element => 
             element[0] === coordinates[0] && element[1] === coordinates[1]
@@ -86,20 +93,23 @@ class gameboard {
         const x = coordinates[0]
         const y = coordinates[1]
 
-        if (typeof board[x][y] === 'string') {
-            const shipName = board[x][y]
+        if (typeof this.board[x][y] === 'string') {
+            const shipName = this.board[x][y]
 
             const targetShip = this.getShip(shipName)
             targetShip.hit()
             // this.hasAllSunk()
 
             this.missedAttacks.push(coordinates)
-            return 'Hit successful'
+            console.log(this.missedAttacks)
+            console.log(`Hit successful against ${this.player}`)
+
             
+        } else {
+            this.missedAttacks.push(coordinates)  
+            console.log(this.missedAttacks)
+            console.log(`Hit unsuccessful against ${this.player}`)
         }
-        
-        this.missedAttacks.push(coordinates)  
-        return this.missedAttacks
     }
 
     
@@ -142,8 +152,8 @@ class gameboard {
             }
 
             for (let i = 0; i < ship.length; i++) {
-                const oldShipDiv = document.getElementById(`${oldShipStart[0]}${oldShipStart[1] + i}`)
-                console.log(oldShipDiv)
+                const playerBoard = document.querySelector(`.${this.player}`)
+                const oldShipDiv = playerBoard.querySelector(`[id="${oldShipStart[0]}${oldShipStart[1] + i}"]`)
                 oldShipDiv.classList.add(ship.color)
                 oldShipDiv.removeAttribute('data-attribute', ship.shipNumber)
             }
@@ -161,8 +171,8 @@ class gameboard {
             }
 
             for (let i = 0; i < ship.length; i++) {
-                const oldShipDiv = document.getElementById(`${oldShipStart[0]}${oldShipStart[1] + i}`)
-                console.log(oldShipDiv)
+                const playerBoard = document.querySelector(`.${this.player}`)
+                const oldShipDiv = playerBoard.querySelector(`[id="${oldShipStart[0]}${oldShipStart[1] + i}"]`)
                 oldShipDiv.classList.add(ship.color)
                 oldShipDiv.removeAttribute('data-attribute', ship.shipNumber)
             }
@@ -177,12 +187,9 @@ class gameboard {
             
             let isUnique = true
             allCoordinates.forEach((item) => {
-                console.log(allCoordinates)
-                console.log(board[item[0]][item[1]])
 
                 if (typeof board[item[0]][item[1]] === 'string'){
                     isUnique === false
-                    console.log(ship)
 
                     const oldShipStart = ship.start    
                     let allCoordinates = []
@@ -193,8 +200,8 @@ class gameboard {
                 }
     
                 for (let i = 0; i < ship.length; i++) {
-                    const oldShipDiv = document.getElementById(`${oldShipStart[0]}${oldShipStart[1] + i}`)
-                    console.log(oldShipDiv)
+                    const playerBoard = document.querySelector(`.${this.player}`)
+                    const oldShipDiv = playerBoard.querySelector(`[id="${oldShipStart[0]}${oldShipStart[1] + i}"]`)
                     oldShipDiv.classList.add(ship.color)
                     oldShipDiv.removeAttribute('data-attribute', ship.shipNumber)
                 }
@@ -244,7 +251,8 @@ class gameboard {
             }
 
             for (let i = 0; i < ship.length; i++) {
-                const oldShipDiv = document.getElementById(`${oldShipStart[0] + i}${oldShipStart[1]}`)
+                const playerBoard = document.querySelector(`.${this.player}`)
+                const oldShipDiv = playerBoard.querySelector(`[id="${oldShipStart[0] + i}${oldShipStart[1]}"]`)
                 console.log(oldShipDiv)
                 oldShipDiv.classList.add(ship.color)
                 oldShipDiv.removeAttribute('data-attribute', ship.shipNumber)
@@ -263,8 +271,8 @@ class gameboard {
             }
 
             for (let i = 0; i < ship.length; i++) {
-                const oldShipDiv = document.getElementById(`${oldShipStart[0] + i}${oldShipStart[1]}`)
-                console.log(oldShipDiv)
+                const playerBoard = document.querySelector(`.${this.player}`)
+                const oldShipDiv = playerBoard.querySelector(`[id="${oldShipStart[0] + i}${oldShipStart[1]}"]`)
                 oldShipDiv.classList.add(ship.color)
                 oldShipDiv.removeAttribute('data-attribute', ship.shipNumber)
             }
@@ -291,8 +299,8 @@ class gameboard {
                 }
     
                 for (let i = 0; i < ship.length; i++) {
-                    const oldShipDiv = document.getElementById(`${oldShipStart[0] + i}${oldShipStart[1]}`)
-                    console.log(oldShipDiv)
+                    const playerBoard = document.querySelector(`.${this.player}`)
+                    const oldShipDiv = playerBoard.querySelector(`[id="${oldShipStart[0] + i}${oldShipStart[1]}"]`)
                     oldShipDiv.classList.add(ship.color)
                     oldShipDiv.removeAttribute('data-attribute', ship.shipNumber)
                 }
@@ -381,9 +389,9 @@ class gameboard {
     }
 
     addEventListeners() {
-        const playerOne = document.querySelector('.playerOne')
+        const player = document.querySelector(`.${this.player}`)
 
-        const cells = playerOne.querySelectorAll('.cell')
+        const cells = player.querySelectorAll('.cell')
         cells.forEach((cell) => {
             if (cell.dataset.attribute !== undefined) {
     
@@ -395,7 +403,6 @@ class gameboard {
     highlightShip(event) {
         const cellClicked = event.target.id
         const shipName = event.target.dataset.attribute
-        
 
         this.shipTarget = this.getShip(shipName)
     
@@ -436,7 +443,9 @@ class gameboard {
     
     
     removeEventListeners() {
-        const cells = document.querySelectorAll('.cell')
+        const player = document.querySelector(`.${this.player}`)
+
+        const cells = player.querySelectorAll('.cell')
         cells.forEach((cell) => {
             cell.removeEventListener('click', this.handleClick)
         })
@@ -456,14 +465,12 @@ class gameboard {
         const oldShipStart = this.shipTarget.start
         // const oldShipEnd = this.shipTarget.end
 
-        
-        
         const cellId = event.target.id
         
         const cellClicked = [parseInt(cellId[0]), parseInt(cellId[1])]
+
         
         if (this.shipTarget.rotation === 'horizontal') {
-            
             
             let allCoordinates = []
             
@@ -471,24 +478,23 @@ class gameboard {
                 const coordinates = [oldShipStart[0], oldShipStart[1] + i]
                 allCoordinates.push(coordinates)
             }
+
             
             allCoordinates.forEach((coordinate) => {
                this.board[coordinate[0]][coordinate[1]] = null
             })
+
             const newStart = [cellClicked[0], cellClicked[1] - this.cellsBeforeClicked]
             const newEnd = [cellClicked[0], parseInt(cellClicked[1]) + this.shipTarget.length - this.cellsBeforeClicked - 1]
             
             for (let i = 0; i < this.shipTarget.length; i++) {
-                const oldShipDiv = document.getElementById(`${oldShipStart[0]}${oldShipStart[1] + i}`)
+                const playerBoard = document.querySelector(`.${this.player}`)
+                const oldShipDiv = playerBoard.querySelector(`[id="${oldShipStart[0]}${oldShipStart[1] + i}"]`)
                 oldShipDiv.classList.remove(this.shipTarget.color)
                 oldShipDiv.removeAttribute('data-attribute', this.shipTarget.shipNumber)
-    
-    
             }
 
             this.placeShip(this.shipTarget, newStart, this.board)
-            console.log(this.board)
-
 
             this.shipTarget.start = newStart
             this.shipTarget = newEnd
@@ -497,7 +503,8 @@ class gameboard {
         if (this.shipTarget.rotation === 'vertical') {
 
             for (let i = 0; i < this.shipTarget.length; i++) {
-                const oldShipDiv = document.getElementById(`${oldShipStart[0] + i}${oldShipStart[1]}`)
+                const playerBoard = document.querySelector(`.${this.player}`)
+                const oldShipDiv = playerBoard.querySelector(`[id="${oldShipStart[0] + i}${oldShipStart[1]}"]`)
                 oldShipDiv.classList.remove(this.shipTarget.color)
                 oldShipDiv.removeAttribute('data-attribute', this.shipTarget.shipNumber)    
             }
@@ -518,7 +525,6 @@ class gameboard {
 
 
             this.placeShip(this.shipTarget, newStart, this.board)
-            console.log(this.board)
 
             this.shipTarget.start = newStart
             this.shipTarget = newEnd
@@ -542,17 +548,13 @@ class gameboard {
     }
     
     removePreGameFeatures() {
-        const cells = document.querySelectorAll('cell')
+        const cells = document.querySelectorAll('.cell')
         cells.forEach((cell) => {
             cell.removeEventListener('click', this.handleClick)
             cell.removeEventListener('click', this.removeEmptyCellEventListeners)
             cell.removeEventListener('click', this.removeEventListeners)
-
+            cell.removeEventListener('click', this.updateShip)
         })
-    }
-    
-    startGame() {
-        console.log('starting')
     }
 
 }

@@ -16,7 +16,8 @@ export class ships {
     }
     
     checkSunk() {
-        return this.isSunk = this.length === this.timesHit ? true : false
+        this.isSunk = this.length === this.timesHit ? true : false
+        this.isSunk === false ? console.log(`Not sunk, hit ${this.timesHit} times`) : console.log('Sunk!')
     }
     
 }

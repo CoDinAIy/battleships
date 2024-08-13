@@ -1,5 +1,4 @@
 import { gameboard } from "./gameBoard";
-import { ships } from "./gameBoard";
 
 
 export class Player {
@@ -8,6 +7,8 @@ export class Player {
         this.gameboard = new gameboard(this.name)
         this.board = this.gameboard.makeBoard() 
     }
-    
-
 }
+
+// export const playerOne = new Player('playerOne')
+// export const computer = new Player('computer')
+

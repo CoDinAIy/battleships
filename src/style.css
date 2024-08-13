@@ -39,3 +39,7 @@
 .highlighted {
     outline: solid 0.2em red;
 }
+
+.hit {
+    background-color: red;
+}
