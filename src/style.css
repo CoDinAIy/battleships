@@ -1,9 +1,40 @@
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.title {
+    font-weight: 500;
+    font-size: 36px;
+    padding: 40px;
+}
+
+.random, .start {
+    padding: 10px;
+    font-size: 18px;
+    border-radius: 10px;
+}
+
+.random {
+    margin-top: 20px;
+}
+
+.start, .gameMessage {
+    margin-top: 10px;
+}
+
+.gameMessage {
+    font-size: 24px;
+}
+
 .row {
     display: flex;
 }
 
 .cell {
-    padding: 1em;
+    height: 50px;
+    width: 50px;
     outline: solid black 0.1em;
 }
 
@@ -36,10 +67,21 @@
     background-color: yellow;
 }
 
+.hidden {
+    background-color: white;
+}
+
 .highlighted {
     outline: solid 0.2em red;
 }
 
 .hit {
     background-color: red;
+}
+
+.missed {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
 }

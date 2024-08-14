@@ -9,14 +9,23 @@ console.log(playerOne)
 console.log(computer)
 
 const randomizeBtn = document.querySelector('.random')
-    randomizeBtn.addEventListener('click', () => {
-        location.reload()
-    })
+randomizeBtn.addEventListener('click', () => {
+    location.reload()
+})
+
+const gameMessages = document.createElement('div')
+gameMessages.classList.add('gameMessage')
+gameMessages.textContent = 'Take a shot at the enemy board!'
 
 const start = document.querySelector('.start')
     start.addEventListener('click', () => {
         playerOne.gameboard.removePreGameFeatures()
         startGame()
+        // start.style.display = 'none'
+        randomizeBtn.textContent = 'New game'
+
+        
+        start.replaceWith(gameMessages)
     })
 
 
@@ -34,12 +43,9 @@ function waitComputerAttack() {
     const randomCoordinate = makeRandomCoordinate()
     console.log(`pc attacked ${randomCoordinate}`)
 
-    const playerBoard = document.querySelector(`.${playerOne.gameboard.player}`)
-    const playerCell = playerBoard.querySelector(`[id="${randomCoordinate[0]}${randomCoordinate[1]}"]`)
+
     playerOne.gameboard.recieveAttack(randomCoordinate, playerOne.board)
     playerOne.gameboard.hasAllSunk()
-    playerCell.classList.add('hit')
-    console.log(playerCell)
     
     if (playerOne.gameboard.gameOver !== true) {
         waitPlayerAttack()
@@ -76,9 +82,7 @@ function handlePlayerOneClick(event) {
     const id = event.target.id
     computer.gameboard.recieveAttack([id[0], id[1]], computer.board)
     computer.gameboard.hasAllSunk()
-    const computerBoard = document.querySelector(`.${computer.gameboard.player}`)
-    const computerCell = computerBoard.querySelector(`[id="${id[0]}${id[1]}"]`)
-    computerCell.classList.add('hit')
+
     removeComputerBoardListener()
 
     if (computer.gameboard.gameOver !== true) {

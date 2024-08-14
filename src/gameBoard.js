@@ -82,6 +82,9 @@ class gameboard {
 
     recieveAttack(coordinates) {
 
+        const board = document.querySelector(`.${this.player}`)
+        const hitCell = board.querySelector(`[id="${coordinates[0]}${coordinates[1]}"]`)
+
         const filteredAttacks = this.missedAttacks.filter(element => 
             element[0] === coordinates[0] && element[1] === coordinates[1]
         )
@@ -103,12 +106,17 @@ class gameboard {
             this.missedAttacks.push(coordinates)
             console.log(this.missedAttacks)
             console.log(`Hit successful against ${this.player}`)
+            console.log(hitCell)
+            hitCell.classList.add('hit')
 
             
         } else {
             this.missedAttacks.push(coordinates)  
             console.log(this.missedAttacks)
             console.log(`Hit unsuccessful against ${this.player}`)
+            console.log(hitCell)
+            hitCell.textContent = 'x'
+            hitCell.classList.add('missed')
         }
     }
 
@@ -221,6 +229,10 @@ class gameboard {
                     const color = ship.color
                     shipDOM.classList.add(color) 
 
+                    if (this.player === 'computer') {
+                        console.log(`player is ${this.player}`)
+                        shipDOM.classList.remove(color)
+                    }
                 })
 
 
@@ -318,6 +330,11 @@ class gameboard {
                     shipDOM.setAttribute('data-attribute', ship.shipNumber)
                     const color = ship.color
                     shipDOM.classList.add(color) 
+
+                    if (this.player === 'computer') {
+                        console.log(`player is ${this.player}`)
+                        shipDOM.classList.remove(color)
+                    }
                 })
             }
 
