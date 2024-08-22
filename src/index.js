@@ -13,19 +13,17 @@ randomizeBtn.addEventListener('click', () => {
     location.reload()
 })
 
-const gameMessages = document.createElement('div')
-gameMessages.classList.add('gameMessage')
-gameMessages.textContent = 'Take a shot at the enemy board!'
+const gameWinnerMessage = document.createElement('div')
+gameWinnerMessage.classList.add('gameWinnerMessage')
 
+const body = document.querySelector('body')
 const start = document.querySelector('.start')
     start.addEventListener('click', () => {
         playerOne.gameboard.removePreGameFeatures()
         startGame()
-        // start.style.display = 'none'
         randomizeBtn.textContent = 'New game'
 
-        
-        start.replaceWith(gameMessages)
+        body.removeChild(start)
     })
 
 
@@ -51,6 +49,8 @@ function waitComputerAttack() {
         waitPlayerAttack()
     } else {
         console.log('Computer Wins')
+        gameWinnerMessage.textContent = 'Computer wins!'
+        body.appendChild(gameWinnerMessage)
         removeComputerBoardListener()   
     }
 }
@@ -89,6 +89,9 @@ function handlePlayerOneClick(event) {
         waitComputerAttack()
     } else {
         console.log('Player One Wins')
+        gameWinnerMessage.textContent = 'You win!'
+        body.appendChild(gameWinnerMessage)
+
     }
 }
 
