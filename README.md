@@ -7,4 +7,4 @@ the user is ready.
 
 The player and bomputer both take turns to guess the coordinates of each others ships, and the game ends when either party wins, followed by a game winner message.
 
-Try it out here:
+Try it out here: https://codinaiy.github.io/Battleships/

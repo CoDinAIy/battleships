@@ -4,6 +4,8 @@
   "description": "",
   "main": "webpack.config.js",
   "scripts": {
+    "deploy": "gh-pages -d dist",
+    "build": "webpack --mode production",
     "test": "jest --watch",
     "start": "webpack serve --open"
   },
