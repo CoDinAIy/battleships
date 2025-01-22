@@ -8,7 +8,3 @@ export class Player {
         this.board = this.gameboard.makeBoard() 
     }
 }
-
-// export const playerOne = new Player('playerOne')
-// export const computer = new Player('computer')
-

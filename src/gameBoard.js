@@ -141,6 +141,9 @@ class gameboard {
 
         this.shipTarget = ship
 
+        const message = document.querySelector('.message')
+
+
         if (start === 'random')
 
             start = this.randomCoordinate(ship, board)
@@ -165,6 +168,7 @@ class gameboard {
                 oldShipDiv.classList.add(ship.color)
                 oldShipDiv.removeAttribute('data-attribute', ship.shipNumber)
             }
+                message.textContent = 'Ship out of bounds! Try again'
                 throw new Error('Ship out of bounds! Try again')
             }
 
@@ -184,6 +188,7 @@ class gameboard {
                 oldShipDiv.classList.add(ship.color)
                 oldShipDiv.removeAttribute('data-attribute', ship.shipNumber)
             }
+                message.textContent = 'Ship out of bounds! Try again'
                 throw new Error('Ship out of bounds! Try again')
             }
 
@@ -213,6 +218,7 @@ class gameboard {
                     oldShipDiv.classList.add(ship.color)
                     oldShipDiv.removeAttribute('data-attribute', ship.shipNumber)
                 }
+                    message.textContent = 'A ship is already here! Try again'
                     throw new Error('A ship is already here! Try again')
                 }
             })
@@ -269,6 +275,7 @@ class gameboard {
                 oldShipDiv.classList.add(ship.color)
                 oldShipDiv.removeAttribute('data-attribute', ship.shipNumber)
             }
+                message.textContent = 'Ship out of bounds! Try again'
                 throw new Error('Ship out of bounds! Try again')
             }
 
@@ -287,7 +294,8 @@ class gameboard {
                 const oldShipDiv = playerBoard.querySelector(`[id="${oldShipStart[0] + i}${oldShipStart[1]}"]`)
                 oldShipDiv.classList.add(ship.color)
                 oldShipDiv.removeAttribute('data-attribute', ship.shipNumber)
-            }
+            }                
+                message.textContent = 'Ship out of bounds! Try again'
                 throw new Error('Ship out of bounds! Try again')
             }
 
@@ -316,6 +324,7 @@ class gameboard {
                     oldShipDiv.classList.add(ship.color)
                     oldShipDiv.removeAttribute('data-attribute', ship.shipNumber)
                 }
+                    message.textContent = 'A ship is already here! Try again'
                     throw new Error('A ship is already here! Try again')
                 }
             })
@@ -420,14 +429,17 @@ class gameboard {
     highlightShip(event) {
         const cellClicked = event.target.id
         const shipName = event.target.dataset.attribute
+        const message = document.querySelector('.message')
+
 
         this.shipTarget = this.getShip(shipName)
     
             const cell = event.target
-            
             const shipType = cell.dataset.attribute
-
             const board = document.querySelector(`.${this.player}`)
+
+            
+
             
             const cells = board.querySelectorAll('.cell')
             let shipCells = []
@@ -436,6 +448,7 @@ class gameboard {
                     shipCells.push(cell.id)
                     cell.classList.add('highlighted')
                     cell.classList.remove('ship')
+                    message.textContent = 'Click anywhere to move your ship'
                 }
             }) 
             
@@ -480,7 +493,7 @@ class gameboard {
     updateShip(event) {
 
         const oldShipStart = this.shipTarget.start
-        // const oldShipEnd = this.shipTarget.end
+        const message = document.querySelector('.message')
 
         const cellId = event.target.id
         
@@ -553,6 +566,8 @@ class gameboard {
         })
         this.addEventListeners()
         this.removeEmptyCellEventListeners()
+        message.textContent = 'Click to move your ships and hit start when ready!'
+
     }
     
     removeEmptyCellEventListeners() {

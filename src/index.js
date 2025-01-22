@@ -1,12 +1,9 @@
 import { initializePlayers, playerOne, computer } from './initializePlayers'
 import './style.css'
 
-console.log ('hello')
 
 initializePlayers()
-
-console.log(playerOne)
-console.log(computer)
+const message = document.querySelector('.message')
 
 const randomizeBtn = document.querySelector('.random')
 randomizeBtn.addEventListener('click', () => {
@@ -33,26 +30,36 @@ function startGame() {
 
 
 function waitPlayerAttack() {
-    console.log('waiting for player one attack')
     addComputerBoardListener()
+    message.textContent = 'Your turn'
 }
 
 function waitComputerAttack() {
     const randomCoordinate = makeRandomCoordinate()
-    console.log(`pc attacked ${randomCoordinate}`)
+    let dotCount = 0
+    message.textContent = 'Computer is thinking...'
 
+    const dotInterval = setInterval(() => {
+        dotCount = (dotCount % 3) + 1
+        message.textContent = `Computer is thinking${'.'.repeat(dotCount)}`
+    }, 250)
 
-    playerOne.gameboard.recieveAttack(randomCoordinate, playerOne.board)
-    playerOne.gameboard.hasAllSunk()
+    setTimeout(() => {
+        clearInterval(dotInterval)
+        message.textContent = 'Computer is thinking...'
+        playerOne.gameboard.recieveAttack(randomCoordinate, playerOne.board)
+        playerOne.gameboard.hasAllSunk()
+
+        if (playerOne.gameboard.gameOver !== true) {
+            waitPlayerAttack()
+        } else {
+            gameWinnerMessage.textContent = 'Computer wins!'
+            message.textContent = ''
+            body.appendChild(gameWinnerMessage)
+            removeComputerBoardListener()   
+        }
+    }, 1000);
     
-    if (playerOne.gameboard.gameOver !== true) {
-        waitPlayerAttack()
-    } else {
-        console.log('Computer Wins')
-        gameWinnerMessage.textContent = 'Computer wins!'
-        body.appendChild(gameWinnerMessage)
-        removeComputerBoardListener()   
-    }
 }
 
 
@@ -88,8 +95,8 @@ function handlePlayerOneClick(event) {
     if (computer.gameboard.gameOver !== true) {
         waitComputerAttack()
     } else {
-        console.log('Player One Wins')
         gameWinnerMessage.textContent = 'You win!'
+        message.textContent = ''
         body.appendChild(gameWinnerMessage)
 
     }

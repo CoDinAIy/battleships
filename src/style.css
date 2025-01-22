@@ -1,19 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=Modak&family=Mogra&display=swap');
 body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    background-color: rgb(48, 48, 48);
+    font-family: "Mogra", serif;
+    font-weight: 400;
+    font-style: normal  ;
 }
 
 .title {
     font-weight: 500;
-    font-size: 36px;
+    font-size: 3.5rem;
     padding: 40px;
+    color: white;
 }
 
 .random, .start {
     padding: 10px;
-    font-size: 18px;
+    font-size: 24px;
     border-radius: 10px;
+    color: white;
+    background-color: rgb(84, 83, 83);
+    font-family: "Mogra", serif;
+
 }
 
 .random {
@@ -22,11 +32,14 @@ body {
 
 .start, .gameMessage {
     margin-top: 10px;
+    font-family: "Mogra", serif;
+
 }
 
 .gameWinnerMessage {
     font-size: 30px;
     padding: 20px;
+    color: white;
 }
 
 .row {
@@ -36,7 +49,7 @@ body {
 .cell {
     height: 50px;
     width: 50px;
-    outline: solid black 0.1em;
+    border: solid white 0.1em;
 }
 
 .boards {
@@ -44,45 +57,86 @@ body {
     gap: 2em;
 }
 
-.ship {
-    outline: solid 0.1em black;
+:root {
+    --highlight-brightness: 1.1;
 }
 
 .blue {
     background-color: blue;
+    --color: blue;
 }
 
 .green {
     background-color: green;
+    --color: green;
 }
 
 .pink {
     background-color: pink;
+    --color: pink;
 }
 
 .orange {
     background-color: orange;
+    --color: orange;
 }
 
 .yellow {
     background-color: yellow;
+    --color: yellow;
 }
 
 .hidden {
     background-color: white;
+    --color: white;
 }
 
 .highlighted {
-    outline: solid 0.2em red;
+    background-color: var(--color);
+    filter: brightness(var(--highlight-brightness));
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    transform: scale(1.1);
+    transition: all 0.3s ease;
 }
+
 
 .hit {
     background-color: red;
 }
 
 .missed {
+    color: white;
+    font-weight: bold;
     display: flex;
     justify-content: center;
     align-items: center;
-    
+}
+
+.message {
+    font-size: 1.5em;
+    margin-top: 1em;
+    color: white;
+}
+
+
+@media (max-width: 1200px) {
+    .title {
+        font-size: 3rem;
+    }
+
+    .cell {
+        height: 40px;
+        width: 40px;
+    }
+}
+
+@media (max-width: 1000px) {
+    .title {
+        font-size: 2rem;
+    }
+
+    .cell {
+        height: 30px;
+        width: 30px;
+    }
 }
