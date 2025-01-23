@@ -6,4 +6,4 @@ The player starts by rearranging their ships, or randomizing the layout with a c
 the user is ready.
 
 The player and computer both take turns to guess the coordinates of each others ships. The player who burns all of the others ships wins.
-Try it out here: https://codinaiy.github.io/Battleships/
+
