@@ -7,3 +7,4 @@ the user is ready.
 
 The player and computer both take turns to guess the coordinates of each others ships. The player who burns all of the others ships wins.
 
+Play here: https://codinaiysbattleshipsgame.netlify.app/
